@@ -1,0 +1,278 @@
+<!doctype html>
+<HTML>
+     <HEAD>
+          <META charset="utf-8">
+          <META http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+          <META name="viewport" content="width=device-width, initial-scale=1">
+          <TITLE>Randomize Me</TITLE>
+          <LINK href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.css" rel="stylesheet" type="text/css">
+          <LINK rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+          
+          <STYLE>
+               /* Page */
+               html {
+                 width: 100%;
+                 height: 100%;
+               }
+
+               .container {
+                 left: 0;
+                 margin: auto;
+                 position: absolute;
+                 top: 20%;
+                 width: 100%;
+                 text-align: center;
+               }
+
+               h1, h2 { color: #555; }
+
+               /* Menu */
+
+
+               .menu {
+                 position: absolute;
+                 width: 200px;
+                 padding: 2px;
+                 margin: 0;
+                 border: 1px solid #bbb;
+                 background: #eee;
+                 background: -webkit-linear-gradient(to bottom, #fff 0%, #e5e5e5 100px, #e5e5e5 100%);
+                 background: linear-gradient(to bottom, #fff 0%, #e5e5e5 100px, #e5e5e5 100%);
+                 z-index: 100;
+                 border-radius: 3px;
+                 box-shadow: 1px 1px 4px rgba(0,0,0,.2);
+                 opacity: 0;
+                 -webkit-transform: translate(0, 15px) scale(.95);
+                 transform: translate(0, 15px) scale(.95);
+                 transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+                 pointer-events: none;
+               }
+
+               .menu-item {
+                 display: block;
+                 position: relative;
+                 margin: 0;
+                 padding: 0;
+                 white-space: nowrap;
+               }
+
+               .menu-btn {
+                 background: none;
+                 line-height: normal;
+                 overflow: visible;
+                 -webkit-user-select: none;
+                 -moz-user-select: none;
+                 -ms-user-select: none;
+                 display: block;
+                 width: 100%;
+                 color: #444;
+                 font-family: 'Roboto', sans-serif;
+                 font-size: 13px;
+                 text-align: left;
+                 cursor: pointer;
+                 border: 1px solid transparent;
+                 white-space: nowrap;
+                 padding: 6px 8px;
+                 border-radius: 3px;
+               }
+                .menu-btn::-moz-focus-inner, .menu-btn::-moz-focus-inner {
+                border: 0;
+                padding: 0;
+               }
+
+               .menu-text {
+                    /*margin-left: 25px;*/
+                    width: 1200px;
+               }
+
+               .menu-btn .fa {
+                 position: absolute;
+                 /*left: 8px;*/
+                 top: 50%;
+                 -webkit-transform: translateY(-50%);
+                 transform: translateY(-50%);
+               }
+
+               .menu-item:hover > .menu-btn {
+                 color: #fff;
+                 outline: none;
+                 background-color: #2E3940;
+                 background: -webkit-linear-gradient(to bottom, #5D6D79, #2E3940);
+                 background: linear-gradient(to bottom, #5D6D79, #2E3940);
+                 border: 1px solid #2E3940;
+               }
+
+               .menu-item.disabled {
+                 opacity: .5;
+                 pointer-events: none;
+               }
+
+               .menu-item.disabled .menu-btn { cursor: default; }
+
+               .menu-separator {
+                 display: block;
+                 margin: 7px 5px;
+                 height: 1px;
+                 border-bottom: 1px solid #fff;
+                 background-color: #aaa;
+               }
+
+               .menu-item.submenu::after {
+                 content: "";
+                 position: absolute;
+                 right: 6px;
+                 top: 50%;
+                 -webkit-transform: translateY(-50%);
+                 transform: translateY(-50%);
+                 border: 5px solid transparent;
+                 border-left-color: #808080;
+               }
+
+               .menu-item.submenu:hover::after { border-left-color: #fff; }
+
+               .menu .menu {
+                 top: 4px;
+                 left: 99%;
+               }
+
+               .show-menu, .menu-item:hover > .menu {
+                 opacity: 1;
+                 -webkit-transform: translate(0, 0) scale(1);
+                 transform: translate(0, 0) scale(1);
+                 pointer-events: auto;
+               }
+
+               .menu-item:hover > .menu {
+                 -webkit-transition-delay: 100ms;
+                 transition-delay: 300ms;
+               }
+          </STYLE>
+     </HEAD>
+
+     <BODY>
+          <!--<MENU class="menu"><li class='menu-item'><button type='button' class='menu-btn'><span class='menu-text'>Refresh</span> </button></li><li class="menu-separator"></li></MENU>-->
+
+          <DIV class="container">
+               <H1>Randomize Me (right click me)</H1>
+          </DIV>
+     
+          <SCRIPT>
+               let menu; // = document.querySelector('.menu');
+               
+               function addMenu(elementName,classList,innerHTML,querySelector) {                    
+                    let elem = document.createElement(elementName);
+                    
+                    // Add all classes
+                    for (let i=0;i<classList.length;i++) {
+                         elem.classList.add(classList[i]);
+                    }
+                    
+                    elem.innerHTML=innerHTML;
+                    document.querySelector(querySelector).append(elem);
+               }
+               
+               function loadData(gender) {
+                    const param=(gender != null ? "?gender=" + gender : "");
+                   
+                    fetch('https://randomuser.me/api/' + param, {method: 'GET'}).then(response => response.json()).then((response) => {                         
+                         //debugger;
+                         
+                         // EL name
+                         // array of class lists
+                         // inner HTML
+                         // selector to add to
+
+                         // Menu Container
+                         addMenu("MENU",["menu"],"<li class='menu-item'><button type='button' class='menu-btn'><span class='menu-text'>Refresh</span> </button></li><li class='menu-item'><button type='button' class='menu-btn'><span class='menu-text'>Refresh (Male)</span> </button></li><li class='menu-item'><button type='button' class='menu-btn'><span class='menu-text'>Refresh (Female)</span> </button></li><li class='menu-separator'></li>","body");
+
+                         // Since I create the menu contianer dynamically, I need to set this global var to the element aftr                          
+                         menu = document.querySelector('.menu');
+
+                         // Cell Phone
+                         addMenu("LI",['menu-item','submenu'],"<LI class='menu-item submenu'><BUTTON type='button' class='menu-btn'><SPAN class='menu-text'>Cell</SPAN></BUTTON><MENU class='menu'><LI class='menu-item'><BUTTON type='button' class='menu-btn'><SPAN class='menu-text'>" + response.results[0].cell + "</SPAN></BUTTON></LI></MENU></LI>",".menu");
+
+                         // DOB
+                         addMenu("LI",['menu-item','submenu'],"<LI class='menu-item submenu'> <button type='button' class='menu-btn'> <span class='menu-text'>DOB</span> </button> <menu class='menu'> <li class='menu-item submenu'> <button type='button' class='menu-btn'> <span class='menu-text'>Date</span> </button> <menu class='menu'> <li class='menu-item'> <button type='button' class='menu-btn'> <span class='menu-text'>" + response.results[0].dob.date + "</span> </button> </li></menu> </li><li class='menu-item submenu'> <button type='button' class='menu-btn'> <span class='menu-text'>Age</span> </button> <menu class='menu'> <li class='menu-item'> <button type='button' class='menu-btn'> <span class='menu-text'>" + response.results[0].dob.age + "</span> </button> </li></menu> </li></menu></li>",".menu");
+
+                         // Email
+                         addMenu("LI",['menu-item','submenu'],"<LI class='menu-item submenu'><BUTTON type='button' class='menu-btn'><SPAN class='menu-text'>Email</SPAN></BUTTON><MENU class='menu'><LI class='menu-item'><BUTTON type='button' class='menu-btn'><SPAN class='menu-text'>" + response.results[0].email + "</SPAN></BUTTON></LI></MENU></LI>",".menu");
+                         
+                         // Gender
+                         addMenu("LI",['menu-item','submenu'],"<LI class='menu-item submenu'><BUTTON type='button' class='menu-btn'><SPAN class='menu-text'>Gender</SPAN></BUTTON><MENU class='menu'><LI class='menu-item'><BUTTON type='button' class='menu-btn'><SPAN class='menu-text'>" + response.results[0].gender + "</SPAN></BUTTON></LI></MENU></LI>",".menu");
+
+                         // Location
+                         addMenu("LI",['menu-item','submenu'],"<LI class='menu-item submenu'> <button type='button' class='menu-btn'> <span class='menu-text'>Location</span> </button> <menu class='menu'> <li class='menu-item submenu'> <button type='button' class='menu-btn'> <span class='menu-text'>Street</span> </button> <menu class='menu'> <li class='menu-item'> <button type='button' class='menu-btn'> <span class='menu-text'>" + response.results[0].location.street + "</span> </button> </li></menu> </li><li class='menu-item submenu'> <button type='button' class='menu-btn'> <span class='menu-text'>City</span> </button> <menu class='menu'> <li class='menu-item'> <button type='button' class='menu-btn'> <span class='menu-text'>" + response.results[0].location.city + "</span> </button> </li></menu> </li><li class='menu-item submenu'> <button type='button' class='menu-btn'> <span class='menu-text'>State</span> </button> <menu class='menu'> <li class='menu-item'> <button type='button' class='menu-btn'> <span class='menu-text'>" + response.results[0].location.state + "</span> </button> </li></menu> </li><li class='menu-item submenu'> <button type='button' class='menu-btn'> <span class='menu-text'>Post Code</span> </button> <menu class='menu'> <li class='menu-item'> <button type='button' class='menu-btn'> <span class='menu-text'>" + response.results[0].location.postcode + "</span> </button> </li></menu> </li></menu></li>",".menu");
+
+                         // Login
+                         addMenu("LI",['menu-item','submenu'],"<LI class='menu-item submenu'> <button type='button' class='menu-btn'> <span class='menu-text'>Login</span> </button> <menu class='menu'> <li class='menu-item submenu'> <button type='button' class='menu-btn'> <span class='menu-text'>Username</span> </button> <menu class='menu'> <li class='menu-item'> <button type='button' class='menu-btn'> <span class='menu-text'>" + response.results[0].login.username + "</span> </button> </li></menu> </li><li class='menu-item submenu'> <button type='button' class='menu-btn'> <span class='menu-text'>Password</span> </button> <menu class='menu'> <li class='menu-item'> <button type='button' class='menu-btn'> <span class='menu-text'>" + response.results[0].login.password + "</span> </button> </li></menu> </li></menu></li>",".menu");
+                         
+                         // Name
+                         addMenu("LI",['menu-item','submenu'],"<LI class='menu-item submenu'><button type='button' class='menu-btn'><span class='menu-text'>Name</span></button><menu class='menu'><li class='menu-item submenu'><button type='button' class='menu-btn'><span class='menu-text'>Title</span></button><menu class='menu'><li class='menu-item'><button type='button' class='menu-btn'><span class='menu-text'>" + response.results[0].name.title + "</span></button></li></menu></li><li class='menu-item submenu'><button type='button' class='menu-btn'><span class='menu-text'>First Name</span></button><menu class='menu'><li class='menu-item'><button type='button' class='menu-btn'><span class='menu-text'>" + response.results[0].name.first + "</span></button></li></menu></li><li class='menu-item submenu'><button type='button' class='menu-btn'><span class='menu-text'>Last Name</span></button><menu class='menu'><li class='menu-item'><button type='button' class='menu-btn'><span class='menu-text'>" + response.results[0].name.last + "</span></button></li></menu></li></menu></li>",".menu");
+                         
+                         // Phone
+                         addMenu("LI",['menu-item','submenu'],"<LI class='menu-item submenu'><BUTTON type='button' class='menu-btn'><SPAN class='menu-text'>Phone</SPAN></BUTTON><MENU class='menu'><LI class='menu-item'><BUTTON type='button' class='menu-btn'><SPAN class='menu-text'>" + response.results[0].phone + "</SPAN></BUTTON></LI></MENU></LI>",".menu");
+                         
+                         // Picture
+                         addMenu("LI",['menu-item','submenu'],"<li class='menu-item submenu'><button type='button' class='menu-btn'><span class='menu-text'>Picture</span></button><menu class='menu'><li class='menu-item submenu'><button type='button' class='menu-btn'><span class='menu-text'>Large</span></button><menu class='menu'><li class='menu-item'><button type='button' class='menu-btn'><span class='menu-text'>" + response.results[0].picture.large + "</span></button></li></menu></li><li class='menu-item submenu'><button type='button' class='menu-btn'><span class='menu-text'>Medium</span></button><menu class='menu'><li class='menu-item'><button type='button' class='menu-btn'><span class='menu-text'>" + response.results[0].picture.medium + "</span></button></li></menu></li><li class='menu-item submenu'><button type='button' class='menu-btn'><span class='menu-text'>Thumbnail</span></button><menu class='menu'><li class='menu-item'><button type='button' class='menu-btn'><span class='menu-text'>" + response.results[0].picture.thumbnail + "</span></button></li></menu></li></menu></li>",".menu");
+                    }).catch(error => { 
+                         console.log('Rest call failed', error); 
+                    });                    
+               };
+               
+               function showMenu(x, y){
+                   // If the menu has been refreshed, the menu element may not exist yet
+                   if (menu==null) return;
+                   
+                   menu.style.left = x + 'px';
+                   menu.style.top = y + 'px';
+                   menu.classList.add('show-menu');
+               }
+
+               function hideMenu(){
+                   // If the menu has been refreshed, the menu element may not exist yet
+                   if (menu==null) return;
+
+                   menu.classList.remove('show-menu');
+               }
+
+               function onContextMenu(e){
+                   // If the menu has been refreshed, the menu element may not exist yet
+                   if (menu==null) return;
+
+                   e.preventDefault();
+                   showMenu(e.pageX, e.pageY);
+                   document.addEventListener('click', onClick, false);
+               }
+
+               async function onClick(e){
+                   hideMenu();
+                   document.removeEventListener('click', onClick);
+                   
+                   if (e.target.innerText === "Refresh" || e.target.innerText === "Refresh (Male)" || e.target.innerText === "Refresh (Female)") {
+                        const elem = document.querySelector('.menu');
+                        
+                        if (elem !== null)
+                             elem.parentNode.removeChild(elem);
+
+                        const gender=(e.target.innerText === "Refresh (Male)" ? "male" : e.target.innerText === "Refresh (Female)" ? "female" : null);                       
+
+                        loadData(gender);
+                        return;
+                   }
+                   //debugger;                   
+                   
+                   //window.prompt("Copy to clipboard: Ctrl+C, Enter", e.target.innerText);
+                   
+                   try {
+                        await navigator.clipboard.writeText(e.target.innerText);
+                   } catch (err) {
+                        console.error('Failed to copy: ', err);
+                   }
+               }
+               
+               loadData();
+               
+               document.addEventListener('contextmenu', onContextMenu, false);
+          </SCRIPT>
+     </BODY>
+</HTML>
